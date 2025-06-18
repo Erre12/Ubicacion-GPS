@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Ubicación con Mapa</title>
+    <title>Ubicación con Mapa y Precisión</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- Leaflet CSS y JS -->
@@ -26,8 +26,9 @@
     <script>
         let mapa;
         let marcador;
+        let circulo;
 
-        function inicializarMapa(lat, lon) {
+        function inicializarMapa(lat, lon, precision) {
             if (!mapa) {
                 mapa = L.map('mapa').setView([lat, lon], 15);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -37,11 +38,25 @@
                 mapa.setView([lat, lon], 15);
             }
 
+            // Agrega o actualiza el marcador
             if (marcador) {
                 marcador.setLatLng([lat, lon]);
             } else {
                 marcador = L.marker([lat, lon]).addTo(mapa)
                     .bindPopup('Tu ubicación actual').openPopup();
+            }
+
+            // Agrega o actualiza el círculo de precisión
+            if (circulo) {
+                circulo.setLatLng([lat, lon]);
+                circulo.setRadius(precision);
+            } else {
+                circulo = L.circle([lat, lon], {
+                    radius: precision,
+                    color: 'blue',
+                    fillColor: '#blue',
+                    fillOpacity: 0.2
+                }).addTo(mapa);
             }
         }
 
@@ -51,8 +66,13 @@
                     function (position) {
                         const lat = position.coords.latitude;
                         const lon = position.coords.longitude;
-                        $(selectorResultado).text(`Latitud: ${lat}, Longitud: ${lon}`);
-                        inicializarMapa(lat, lon);
+                        const precision = position.coords.accuracy;
+
+                        $(selectorResultado).text(
+                            `Latitud: ${lat}, Longitud: ${lon}, Precisión estimada: ${precision.toFixed(1)} metros`
+                        );
+
+                        inicializarMapa(lat, lon, precision);
                     },
                     function (error) {
                         let mensaje;
