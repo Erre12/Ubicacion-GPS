@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ubicación</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+    <button id="btnUbicacion">Obtener ubicación</button>
+    <p id="resultado"></p>
+
+    <script>
+        function obtenerUbicacion(selectorResultado) {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        $(selectorResultado).text(`Latitud: ${lat}, Longitud: ${lon}`);
+                    },
+                    function (error) {
+                        let mensaje;
+                        switch (error.code) {
+                            case error.PERMISSION_DENIED:
+                                mensaje = "Permiso denegado para acceder a la ubicación.";
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                mensaje = "La información de ubicación no está disponible.";
+                                break;
+                            case error.TIMEOUT:
+                                mensaje = "La solicitud de ubicación expiró.";
+                                break;
+                            default:
+                                mensaje = "Ocurrió un error desconocido.";
+                        }
+                        $(selectorResultado).text(mensaje);
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            } else {
+                $(selectorResultado).text("Tu navegador no soporta geolocalización.");
+            }
+        }
+
+        $("#btnUbicacion").on("click", function () {
+            obtenerUbicacion("#resultado");
+        });
+    </script>
+</body>
+</html>
