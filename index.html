@@ -2,15 +2,49 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Ubicación</title>
+    <title>Ubicación con Mapa</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Leaflet CSS y JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <style>
+        #mapa {
+            height: 400px;
+            width: 100%;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
 
     <button id="btnUbicacion">Obtener ubicación</button>
     <p id="resultado"></p>
+    <div id="mapa"></div>
 
     <script>
+        let mapa;
+        let marcador;
+
+        function inicializarMapa(lat, lon) {
+            if (!mapa) {
+                mapa = L.map('mapa').setView([lat, lon], 15);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; OpenStreetMap contributors'
+                }).addTo(mapa);
+            } else {
+                mapa.setView([lat, lon], 15);
+            }
+
+            if (marcador) {
+                marcador.setLatLng([lat, lon]);
+            } else {
+                marcador = L.marker([lat, lon]).addTo(mapa)
+                    .bindPopup('Tu ubicación actual').openPopup();
+            }
+        }
+
         function obtenerUbicacion(selectorResultado) {
             if ("geolocation" in navigator) {
                 navigator.geolocation.getCurrentPosition(
@@ -18,6 +52,7 @@
                         const lat = position.coords.latitude;
                         const lon = position.coords.longitude;
                         $(selectorResultado).text(`Latitud: ${lat}, Longitud: ${lon}`);
+                        inicializarMapa(lat, lon);
                     },
                     function (error) {
                         let mensaje;
