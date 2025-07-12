@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Archivo Intermedio (Puente)</title>
+    <style>body { background-color: #e0f7e0; padding: 20px; }</style>
+</head>
+<body>
+    <h2>INTERMEDIO.HTML (Puente)</h2>
+    <p>Comunicando con FINAL.HTML y INICIO.HTML</p>
+    
+    <iframe id="iframeFinal" src="https://localhost/final.html"  allow="geolocation" style="width:100%; height: 250px;"></iframe>
+
+    <script>
+        const iframeFinal = document.getElementById('iframeFinal');
+
+        // --- Manejo de mensajes entrantes (Desde inicio.html) ---
+        window.addEventListener('message', function(event) {
+            
+            // Validamos que el mensaje sea una solicitud de ubicación
+            if (event.data.type === 'request-location') {
+                console.log('Intermedio: Recibiendo solicitud de inicio.html');
+                
+                // Reenviamos la solicitud a final.html
+                // Aseguramos que el iframe esté cargado para enviar el mensaje
+                iframeFinal.onload = function() {
+                    iframeFinal.contentWindow.postMessage({
+                        type: 'request-location'
+                    }, '*'); // Usamos '*' o el origen exacto de final.html
+                };
+                
+                // Si el iframe ya está cargado, envía el mensaje directamente
+                if (iframeFinal.contentWindow.postMessage) {
+                     iframeFinal.contentWindow.postMessage({
+                        type: 'request-location'
+                    }, '*');
+                }
+            }
+            
+            // --- Manejo de mensajes entrantes (Desde final.html) ---
+            // Validamos que el mensaje sea una respuesta de ubicación
+            if (event.data.type === 'location-response') {
+                console.log('Intermedio: Recibiendo respuesta de final.html');
+                
+                // Reenviamos la respuesta a inicio.html (nuestro padre)
+                window.parent.postMessage({
+                    type: 'location-response', // Mantener el mismo tipo o cambiarlo si es necesario
+                    lat: event.data.lat,
+                    lon: event.data.lon
+                }, '*'); // Usamos '*' o el origen exacto de inicio.html
+            }
+        });
+    </script>
+</body>
+</html>

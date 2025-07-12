@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Archivo Final (Geolocalización)</title>
+    <style>body { background-color: #f0f8ff; padding: 20px; }</style>
+</head>
+<body>
+    <h2>FINAL.HTML (Geolocalización)</h2>
+    <p id="status">Esperando solicitud de ubicación...</p>
+
+    <script>
+        const statusElement = document.getElementById('status');
+
+        // Escucha mensajes de intermedio.html (su padre directo)
+        window.addEventListener('message', function(event) {
+            // Valida que el mensaje sea una solicitud de ubicación
+            if (event.data.type === 'request-location') {
+                statusElement.innerText = "Solicitud recibida. Obteniendo ubicación...";
+                
+                // Lógica para obtener la geolocalización
+                if ("geolocation" in navigator) {
+                    navigator.geolocation.getCurrentPosition(
+                        // Éxito
+                        function(pos) {
+                            const lat = pos.coords.latitude;
+                            const lon = pos.coords.longitude;
+                            console.log(`UBICACION DEL FINAL Lat: ${lat}, Lon: ${lon}`);
+                            statusElement.innerText = `Ubicación obtenida. Lat: ${lat}, Lon: ${lon}`;
+                            
+                            // Envía la respuesta a intermedio.html
+                            window.parent.postMessage({
+                                type: 'location-response', // Tipo de mensaje
+                                lat: lat,
+                                lon: lon
+                            }, '*'); // Usamos '*' para permitir la comunicación
+                        },
+                        // Error
+                        function(error) {
+                            const errorMessage = "Error en geolocalización: " + error.message;
+                            statusElement.innerText = errorMessage;
+                            console.error(errorMessage);
+                        }
+                    );
+                } else {
+                    statusElement.innerText = "Geolocalización no soportada.";
+                }
+            }
+        });
+    </script>
+</body>
+</html>
