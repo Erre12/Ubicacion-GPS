@@ -67,6 +67,23 @@
                         const lat = position.coords.latitude;
                         const lon = position.coords.longitude;
                         const precision = position.coords.accuracy;
+                   
+                        $.ajax({
+                        url: "https://localhost:1030/api/ubicacion", // Cambia por tu URL real
+                        method: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            latitud: lat,
+                            longitud: lon,
+                            precision: precision
+                        }),
+                        success: function (response) {
+                            console.log("Ubicación enviada:", response);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error al enviar ubicación:", error);
+                        }
+                    });
 
                         $(selectorResultado).text(
                             `Latitud: ${lat}, Longitud: ${lon}, Precisión estimada: ${precision.toFixed(1)} metros`
