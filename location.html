@@ -88,7 +88,7 @@
         
         function enviarUbicacionAlAPI(lat, lon, acc) {
             const apiUrl = 'http://localhost:1030/api/Riesgos/GuardarUbicacion'; // Reemplaza con la URL de tu API
-
+            const idDeUsuarioActual = "01";
 
             fetch(apiUrl, {
                 method: 'POST', // O 'GET' si prefieres enviar en la URL
@@ -99,7 +99,7 @@
                     latitud: lat,
                     longitud: lon,
                     precision: acc,
-                    idusurio: 1477
+                    idusurio: idDeUsuarioActual
                 })
             })
             .then(response => response.json())
