@@ -43,25 +43,13 @@
       // Extrae el valor de 'IdUsuario' de los parámetros
         const idUsuario = urlParams.get('IdUsuario');
         const hexOrigin = urlParams.get('origin');
-        const origen = 0;
         
-          function hexToString(hex) {
-            let str = '';
-            for (let i = 0; i < hex.length; i += 2) {
-              str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-            }
-            return str;
-          }
-        
-          if (hexOrigin) {
-            origen = hexToString(hexOrigin);
-            console.log("Origen decodificado:", origen);
-            
-            // Ya puedes usar 'origen' como desees
-            // Ejemplo: redirigir, mostrar, enviar en petición, etc.
-          } else {
-            console.warn("No se proporcionó el parámetro 'origin'");
-          }
+        if (originHex) {
+                // Convertir de hex a texto
+                const originDecoded = originHex.match(/.{1,2}/g).map(byte => String.fromCharCode(parseInt(byte, 16))).join('');
+                console.log("Origin decodificado:", originDecoded);
+        }
+
        
             
         function mostrarUbicacion(posicion) {
@@ -133,7 +121,7 @@
                 // Luego de cierto tiempo o acción, redirigir a home
                 setTimeout(() => {
                     
-                    window.location.href =`http://localhost:63623/pages/Home/Home.html?v=${Date.now()}`;
+                    window.location.href =`${originDecode}/pages/Home/Home.html?v=${Date.now()}`;
                 }, 1000); // espera 3 segundos antes de redirigir
             })
             .catch(error => {
