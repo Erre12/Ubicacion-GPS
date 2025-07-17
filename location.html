@@ -36,9 +36,21 @@
 
 
     <div id="error-mensaje" class="error" style="display:none;"></div>
-
+    <p id="usuario-info"></p>
 
     <script>
+        const urlParams = new URLSearchParams(window.location.search);
+      // Extrae el valor de 'IDUSUARIO' de los parámetros
+      const idUsuario = urlParams.get('IDUSUARIO');
+      // Muestra el ID de usuario en la consola (o úsalo como desees)
+      console.log("ID del usuario:", idUsuario);
+      // Ejemplo de cómo usarlo en la página (puedes modificar esto según tus necesidades)
+      if (idUsuario) {
+        document.getElementById("usuario-info").innerText = `Bienvenido, Usuario ID: ${idUsuario}`;
+      } else {
+        document.getElementById("usuario-info").innerText = "No se proporcionó un ID de usuario.";
+      }
+        
         function mostrarUbicacion(posicion) {
             const latitudElement = document.getElementById('latitud');
             const longitudElement = document.getElementById('longitud');
