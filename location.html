@@ -42,7 +42,26 @@
         const urlParams = new URLSearchParams(window.location.search);
       // Extrae el valor de 'IdUsuario' de los parámetros
         const idUsuario = urlParams.get('IdUsuario');
-        const origen = urlParams.get('origin');
+        const hexOrigin = urlParams.get('origin');
+        const origen = 0;
+        
+          function hexToString(hex) {
+            let str = '';
+            for (let i = 0; i < hex.length; i += 2) {
+              str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+            }
+            return str;
+          }
+        
+          if (hexOrigin) {
+            origen = hexToString(hexOrigin);
+            console.log("Origen decodificado:", origen);
+            
+            // Ya puedes usar 'origen' como desees
+            // Ejemplo: redirigir, mostrar, enviar en petición, etc.
+          } else {
+            console.warn("No se proporcionó el parámetro 'origin'");
+          }
        
             
         function mostrarUbicacion(posicion) {
@@ -91,7 +110,7 @@
             document.getElementById('error-mensaje').textContent = "La geolocalización no es soportada por este navegador.";
             document.getElementById('error-mensaje').style.display = 'block';
         }
-        
+   
         function enviarUbicacionAlAPI(lat, lon, acc) {
             const apiUrl = 'http://localhost:1030/api/Riesgos/GuardarUbicacion'; // Reemplaza con la URL de tu API
             //const idDeUsuarioActual = "01";
