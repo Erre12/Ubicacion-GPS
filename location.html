@@ -85,6 +85,37 @@
             document.getElementById('error-mensaje').textContent = "La geolocalización no es soportada por este navegador.";
             document.getElementById('error-mensaje').style.display = 'block';
         }
+        
+        function enviarUbicacionAlAPI(lat, lon, acc) {
+            const apiUrl = 'http://localhost:1030/api/Riesgos/GuardarUbicacion'; // Reemplaza con la URL de tu API
+
+
+            fetch(apiUrl, {
+                method: 'POST', // O 'GET' si prefieres enviar en la URL
+                headers: {
+                    'Content-Type': 'application/json' // Si envías JSON en el body
+                },
+                body: JSON.stringify({
+                    latitud: lat,
+                    longitud: lon,
+                    precision: acc
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Respuesta del API:', data);
+                // Aquí podrías mostrar un mensaje al usuario si lo deseas
+            })
+            .catch(error => {
+                console.error('Error al enviar la ubicación al API:', error);
+            });
+        }
+
+
+        function mostrarUbicacion(posicion) {
+            // ... (el código anterior para mostrar en la página) ...
+            enviarUbicacionAlAPI(posicion.coords.latitude, posicion.coords.longitude, posicion.coords.accuracy);
+        }
     </script>
 </body>
 </html>
