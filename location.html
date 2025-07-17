@@ -36,20 +36,12 @@
 
 
     <div id="error-mensaje" class="error" style="display:none;"></div>
-    <p id="usuario-info"></p>
+   
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-      // Extrae el valor de 'IDUSUARIO' de los parámetros
-      const idUsuario = urlParams.get('IDUSUARIO');
-      // Muestra el ID de usuario en la consola (o úsalo como desees)
-      console.log("ID del usuario:", idUsuario);
-      // Ejemplo de cómo usarlo en la página (puedes modificar esto según tus necesidades)
-      if (idUsuario) {
-        document.getElementById("usuario-info").innerText = `Bienvenido, Usuario ID: ${idUsuario}`;
-      } else {
-        document.getElementById("usuario-info").innerText = "No se proporcionó un ID de usuario.";
-      }
+      // Extrae el valor de 'SessionUserId' de los parámetros
+        const idUsuario = urlParams.get('SessionUserId');
         
         function mostrarUbicacion(posicion) {
             const latitudElement = document.getElementById('latitud');
@@ -100,7 +92,7 @@
         
         function enviarUbicacionAlAPI(lat, lon, acc) {
             const apiUrl = 'http://localhost:1030/api/Riesgos/GuardarUbicacion'; // Reemplaza con la URL de tu API
-            const idDeUsuarioActual = "01";
+            //const idDeUsuarioActual = "01";
 
             fetch(apiUrl, {
                 method: 'POST', // O 'GET' si prefieres enviar en la URL
@@ -111,7 +103,7 @@
                     latitud: lat,
                     longitud: lon,
                     precision: acc,
-                    idusurio: idDeUsuarioActual
+                    idusurio: idUsuario
                 })
             })
             .then(response => response.json())
