@@ -103,7 +103,7 @@
                     latitud: lat,
                     longitud: lon,
                     precision: acc,
-                    idusurio: idUsuario
+                    idusuario: parseInt(idUsuario, 10)
                 })
             })
             .then(response => response.json())
