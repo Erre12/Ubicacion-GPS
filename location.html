@@ -43,7 +43,7 @@
       // Extrae el valor de 'IdUsuario' de los parámetros
         const idUsuario = urlParams.get('IdUsuario');
         const originHex = urlParams.get('origin');
-        const originDecoded=0;
+        let originDecoded=0;
         
         if (originHex) {
                 // Convertir de hex a texto
