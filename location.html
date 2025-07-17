@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obtener Geolocalización</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        #resultados {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .dato {
+            margin-bottom: 10px;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Obtener tu Geolocalización</h1>
+
+
+    <div id="resultados" style="display:none;">
+        <h2>Información de Ubicación:</h2>
+        <div class="dato"><strong>Latitud:</strong> <span id="latitud"></span></div>
+        <div class="dato"><strong>Longitud:</strong> <span id="longitud"></span></div>
+        <div class="dato"><strong>Precisión:</strong> <span id="precision"></span> metros</div>
+    </div>
+
+
+    <div id="error-mensaje" class="error" style="display:none;"></div>
+
+
+    <script>
+        function mostrarUbicacion(posicion) {
+            const latitudElement = document.getElementById('latitud');
+            const longitudElement = document.getElementById('longitud');
+            const precisionElement = document.getElementById('precision');
+            const resultadosDiv = document.getElementById('resultados');
+
+
+            latitudElement.textContent = posicion.coords.latitude;
+            longitudElement.textContent = posicion.coords.longitude;
+            precisionElement.textContent = posicion.coords.accuracy;
+
+
+            resultadosDiv.style.display = 'block';
+            document.getElementById('error-mensaje').style.display = 'none';
+        }
+
+
+        function mostrarError(error) {
+            let mensaje;
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    mensaje = "El usuario ha denegado el permiso para la geolocalización.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    mensaje = "La información de ubicación no está disponible.";
+                    break;
+                case error.TIMEOUT:
+                    mensaje = "Se ha agotado el tiempo de espera para obtener la ubicación.";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    mensaje = "Ha ocurrido un error desconocido.";
+                    break;
+            }
+            const errorDiv = document.getElementById('error-mensaje');
+            errorDiv.textContent = mensaje;
+            errorDiv.style.display = 'block';
+            document.getElementById('resultados').style.display = 'none';
+        }
+
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(mostrarUbicacion, mostrarError);
+        } else {
+            document.getElementById('error-mensaje').textContent = "La geolocalización no es soportada por este navegador.";
+            document.getElementById('error-mensaje').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
