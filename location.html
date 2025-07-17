@@ -42,7 +42,9 @@
         const urlParams = new URLSearchParams(window.location.search);
       // Extrae el valor de 'IdUsuario' de los parámetros
         const idUsuario = urlParams.get('IdUsuario');
-        
+        const origen = urlParams.get('origin');
+       
+            
         function mostrarUbicacion(posicion) {
             const latitudElement = document.getElementById('latitud');
             const longitudElement = document.getElementById('longitud');
@@ -110,9 +112,10 @@
             .then(data => {
                 console.log('Respuesta del API:', data);
                 // Luego de cierto tiempo o acción, redirigir a home
-                //setTimeout(() => {
-                //    window.location.href = "../../pages/Home/Home.html?v=" + Date.now();
-                //}, 1000); // espera 3 segundos antes de redirigir
+                setTimeout(() => {
+                    
+                    window.location.href =`${origen}/pages/Home/Home.html?v=${Date.now()}`;
+                }, 1000); // espera 3 segundos antes de redirigir
             })
             .catch(error => {
                 console.error('Error al enviar la ubicación al API:', error);
